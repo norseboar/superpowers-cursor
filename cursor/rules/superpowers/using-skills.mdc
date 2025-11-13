@@ -21,6 +21,13 @@ This is not negotiable. This is not optional. You cannot rationalize your way ou
 
    **Why:** Transparency helps your human partner understand your process and catch errors early. It also confirms you actually read the skill.
 
+## Tool Mapping for Cursor
+
+When skills reference tools you don't have, substitute your equivalent tools:
+- `TodoWrite` → `todo_write` (your task tracking/planning tool)
+- `Task` tool with sub-agents → Tell the user that sub-agents aren't available in Cursor yet and you'll do the work the sub-agent would do
+- `Read`, `Write`, `Edit`, `Bash` → Use your native tools with similar functions
+
 ## Common Rationalizations That Mean You're About To Fail
 
 If you catch yourself thinking ANY of these thoughts, STOP. You are rationalizing. Follow the skill exactly.
@@ -40,7 +47,7 @@ If a skill for your task exists, you must use it or you will fail at your task.
 
 ## Skills with Checklists
 
-If a skill has a checklist, YOU MUST create TodoWrite todos for EACH item.
+If a skill has a checklist, YOU MUST create `todo_write` todos for EACH item.
 
 **Don't:**
 
@@ -49,7 +56,7 @@ If a skill has a checklist, YOU MUST create TodoWrite todos for EACH item.
 - Batch multiple items into one todo
 - Mark complete without doing them
 
-**Why:** Checklists without TodoWrite tracking = steps get skipped. Every time. The overhead of TodoWrite is tiny compared to the cost of missing steps.
+**Why:** Checklists without `todo_write` tracking = steps get skipped. Every time. The overhead of `todo_write` is tiny compared to the cost of missing steps.
 
 ## About these skills
 
@@ -75,6 +82,6 @@ Your human partner's specific instructions describe WHAT to do, not HOW.
 
 1. Announce you're using it
 2. Follow what it says exactly
-3. If it has a checklist → TodoWrite for every item
+3. If it has a checklist → `todo_write` for every item
 
 **Following a relevant skill = mandatory. Not optional.**
