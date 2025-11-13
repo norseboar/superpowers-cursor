@@ -65,6 +65,37 @@ This file tracks which Claude skills have been adapted to Cursor commands and ru
 
 **Notes**: Converted to a rule that provides guidance on tracing bugs backward through call stacks. Removed Claude-specific language and adapted testing instructions to prompt the user to add instrumentation and provide stack traces instead of the agent running them. Kept all key principles (never fix just the symptom, trace backward to source, add defense-in-depth), the tracing process steps, stack trace tips, and the visual diagram showing the tracing flow. This rule is referenced as REQUIRED by systematic-debugging when errors occur deep in call stacks.
 
+### verification-before-completion
+
+**Original**: `skills/verification-before-completion/SKILL.md`
+
+**Created**:
+
+- `cursor/rules/superpowers/verification-before-completion.mdc`
+
+**Notes**: Converted to a rule that provides guidance on verifying work before claiming completion. Removed TDD-specific references (red-green cycle) and adapted all execution instructions to prompt the user to run verification commands and provide results instead of the agent running them. Kept all key principles: the iron law "NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE", the gate function (identify, run, read, verify, claim), all red flags, rationalizations, and common failure patterns. The rule applies automatically before any completion claims. Referenced as REQUIRED by systematic-debugging in Phase 4 when verifying fixes.
+
+### code-reviewer
+
+**Original**: `skills/requesting-code-review/code-reviewer.md`
+
+**Created**:
+
+- `cursor/commands/superpowers/review-code.md`
+
+**Notes**: Converted the code-reviewer template into a command for performing code reviews. Removed placeholder syntax and converted to instructions for the AI. Kept all review checklist categories (code quality, architecture, testing, requirements, production readiness), issue categorization by severity (Critical/Important/Minor), output format structure, and all critical rules. Adapted testing instructions to prompt the user to run tests and provide results instead of the agent running them. The command provides a systematic workflow for reviewing code changes against requirements/plans and assessing production readiness.
+
+### receiving-code-review
+
+**Original**: `skills/receiving-code-review/SKILL.md`
+
+**Created**:
+
+- `cursor/rules/superpowers/receiving-code-review.mdc`
+- `cursor/commands/superpowers/address-code-review.md`
+
+**Notes**: Converted to both a rule (principles) and a command (workflow). The rule provides guidance on how to receive and process code review feedback. The command provides a systematic workflow for addressing code review documents (typically created by the review-code command). Removed YAML frontmatter and Claude-specific language. Adapted testing instructions to prompt the user to test each fix and verify no regressions instead of the agent running tests. Kept all key principles: verify before implementing, no performative agreement, technical correctness over social comfort, handling unclear feedback, source-specific handling (human partner vs external reviewers), YAGNI checks, implementation order, when to push back, and all forbidden responses. Preserved all rationalizations, don'ts, exceptions, and warnings. The command assumes a review document exists and walks through reading, understanding, verifying, and implementing fixes in the proper order (Critical → Important → Minor).
+
 ## Pending Conversion
 
 <!-- Skills that haven't been converted yet -->
