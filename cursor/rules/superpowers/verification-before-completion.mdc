@@ -1,0 +1,168 @@
+# Verification Before Completion
+
+Making changes and assuming they work is dangerous. Stacking unverified changes creates cascading failures. Stop after each change and ask the user to verify before proceeding.
+
+## When This Applies
+
+**ALWAYS before:**
+
+- Making another change after a previous one
+- Claiming any change works or is complete
+- Moving to the next step in a multi-step process
+- Making "while I'm here" improvements
+- Stacking multiple fixes or features together
+- Assuming previous changes worked
+
+## The Iron Law
+
+```
+NO NEW CHANGES WITHOUT VERIFYING PREVIOUS CHANGES FIRST
+```
+
+If you haven't stopped and asked the user to verify the last change, you cannot make another change.
+
+## Core Principle
+
+**Incremental verification:** One change → Stop → Ask user to verify → Wait for confirmation → Then proceed.
+
+**NOT:** Multiple changes → Assume they all work → Continue.
+
+## The Process
+
+```
+AFTER making ANY change:
+
+1. RUN automatically (agent can do these):
+   - Run linter to check for syntax/style errors
+   - Run build/compile to check for compilation errors
+   - Check for obvious code issues
+
+2. STOP immediately after automated checks
+3. IDENTIFY: What should the user functionally test?
+   - Does the specific thing work as expected?
+   - Is the bug actually fixed?
+   - Does the feature meet requirements?
+   - Does it work in the actual environment?
+
+4. ASK: "Please test [specific functionality] and let me know if it works"
+5. WAIT: Do not proceed until user confirms
+6. ONLY THEN: Make next change (if needed)
+```
+
+## What Agent Can Run Automatically
+
+**Agent CAN run these without asking:**
+
+- Linter commands (check syntax, style, formatting)
+- Build/compile commands (check compilation errors)
+- Static analysis tools
+
+**Agent MUST ask user for:**
+
+- Functional testing (does it actually work?)
+- Testing if bugs are fixed
+- Testing if features work as expected
+- Testing in actual runtime environment
+- User experience verification
+
+## Common Mistakes
+
+- **Making multiple changes at once** → One change, verify, then next
+- **Assuming changes work** → Always ask user to check
+- **Stacking fixes** → Fix one thing, verify, then fix next
+- **"While I'm here" improvements** → Verify original change first
+- **Continuing without confirmation** → Stop and wait for user feedback
+- **Making changes based on assumptions** → Ask user to verify assumptions first
+
+## Red Flags - STOP
+
+- About to make a second change without verifying the first
+- Thinking "I'll make these changes and then test"
+- Assuming previous change worked because "it should"
+- Making "while I'm here" improvements
+- Stacking multiple fixes together
+- Continuing a multi-step process without checkpoints
+- **ANY change without user verification of previous change**
+
+## Rationalizations
+
+| Excuse                                    | Reality                                   |
+| ----------------------------------------- | ----------------------------------------- |
+| "I'll make all changes then test"         | Changes compound errors. Verify each one. |
+| "This should work"                        | Should ≠ does. Ask user to check.         |
+| "Small change, doesn't need verification" | Small changes break things too.           |
+| "I'm confident"                           | Confidence ≠ evidence. Verify.            |
+| "Just one more quick fix"                 | Stop. Verify previous fix first.          |
+| "User can test later"                     | Verify now, before making more changes.   |
+| "It's just a refactor"                    | Refactors break things. Verify.           |
+
+## Key Patterns
+
+**Single change:**
+
+```
+✅ Make change → Run linter/build → Stop → "Please test [specific functionality]" → Wait → User confirms → Continue
+❌ Make change → Run linter/build → Assume it works → Make more changes
+```
+
+**Multiple fixes:**
+
+```
+✅ Fix #1 → Stop → Ask user to verify → Wait → Fix #2 → Stop → Ask user to verify → Wait
+❌ Fix #1, Fix #2, Fix #3 → "Please test all of these"
+```
+
+**Feature implementation:**
+
+```
+✅ Step 1 → Stop → Ask user to verify → Wait → Step 2 → Stop → Ask user to verify → Wait
+❌ Step 1, Step 2, Step 3 → "Here's everything, please test"
+```
+
+**Bug fix:**
+
+```
+✅ Fix bug → Stop → "Please test the original issue and confirm it's fixed" → Wait → User confirms
+❌ Fix bug → Assume fixed → Move to next task
+```
+
+## What to Ask User to Verify
+
+**After code changes:**
+
+- "Please test [specific functionality] and let me know if it works"
+- "Please check if [original issue] is fixed"
+- "Please verify [specific behavior] works as expected"
+
+**After configuration changes:**
+
+- "Please test if the app starts correctly and [specific behavior] works"
+- "Please verify [specific behavior] works as expected"
+
+**After refactoring:**
+
+- "Please test [affected functionality] to ensure nothing broke"
+- "Please check if [specific feature] still works correctly"
+
+**After adding features:**
+
+- "Please test [new feature] and confirm it works as expected"
+- "Please verify [requirement] is met"
+
+**Note:** Agent will run linter and build automatically. User verification is for functional testing - does it actually work in practice?
+
+## Why This Matters
+
+- **Prevents cascading failures** - Catch errors before they compound
+- **Saves time** - Fix one thing at a time, not multiple broken things
+- **Builds trust** - User sees each step verified, not assumptions
+- **Reduces rework** - Know what works vs what doesn't before continuing
+- **Clearer debugging** - If something breaks, you know which change caused it
+
+## The Bottom Line
+
+**One change at a time. Verify each one. Then proceed.**
+
+Stop after every change. Ask the user to check. Wait for confirmation. Only then make the next change.
+
+This is non-negotiable.

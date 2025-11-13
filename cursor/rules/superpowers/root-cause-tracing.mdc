@@ -1,0 +1,108 @@
+# Root Cause Tracing
+
+Bugs often manifest deep in the call stack. Your instinct is to fix where the error appears, but that's treating a symptom. Trace backward through the call chain until you find the original trigger, then fix at the source.
+
+## When This Applies
+
+**Use when:**
+- Error happens deep in execution (not at entry point)
+- Stack trace shows long call chain
+- Unclear where invalid data originated
+- Need to find which test/code triggers the problem
+
+## Principles
+
+- **NEVER fix just where the error appears** - Trace back to find the original trigger
+- **Observe the symptom** - What error message/behavior do you see?
+- **Find immediate cause** - What code directly causes this?
+- **Ask: What called this?** - Trace up the call stack
+- **Keep tracing up** - What value was passed? Where did it come from?
+- **Find original trigger** - Where did the bad value originate?
+- **Fix at source** - Address the root cause, not the symptom
+- **Add validation at each layer** - After fixing, add defense-in-depth validation
+
+## The Tracing Process
+
+1. **Observe the Symptom** - Note the error message and location
+2. **Find Immediate Cause** - Identify the code that directly causes the error
+3. **Ask: What Called This?** - Trace up the call stack
+4. **Keep Tracing Up** - What value was passed? Where did it come from?
+5. **Find Original Trigger** - Identify where the bad value originated
+6. **Fix at Source** - Address the root cause
+7. **Add Defense-in-Depth** - Add validation at each layer data passes through
+
+## Adding Stack Traces
+
+When you can't trace manually, add instrumentation:
+
+```typescript
+// Before the problematic operation
+async function gitInit(directory: string) {
+  const stack = new Error().stack;
+  console.error('DEBUG git init:', {
+    directory,
+    cwd: process.cwd(),
+    nodeEnv: process.env.NODE_ENV,
+    stack,
+  });
+
+  await execFileAsync('git', ['init'], { cwd: directory });
+}
+```
+
+**Critical:** Use `console.error()` in tests (not logger - may not show)
+
+**Stop and ask the user to:**
+1. Add this instrumentation
+2. Run the code and capture output
+3. Provide the stack trace output
+
+**Analyze stack traces:**
+- Look for test file names
+- Find the line number triggering the call
+- Identify the pattern (same test? same parameter?)
+
+## Finding Which Test Causes Pollution
+
+If something appears during tests but you don't know which test:
+
+**Stop and ask the user to run tests one-by-one or use bisection to find the polluter.**
+
+## Key Principle
+
+```dot
+digraph principle {
+    "Found immediate cause" [shape=ellipse];
+    "Can trace one level up?" [shape=diamond];
+    "Trace backwards" [shape=box];
+    "Is this the source?" [shape=diamond];
+    "Fix at source" [shape=box];
+    "Add validation at each layer" [shape=box];
+    "Bug impossible" [shape=doublecircle];
+    "NEVER fix just the symptom" [shape=octagon, style=filled, fillcolor=red, fontcolor=white];
+
+    "Found immediate cause" -> "Can trace one level up?";
+    "Can trace one level up?" -> "Trace backwards" [label="yes"];
+    "Can trace one level up?" -> "NEVER fix just the symptom" [label="no"];
+    "Trace backwards" -> "Is this the source?";
+    "Is this the source?" -> "Trace backwards" [label="no - keeps going"];
+    "Is this the source?" -> "Fix at source" [label="yes"];
+    "Fix at source" -> "Add validation at each layer";
+    "Add validation at each layer" -> "Bug impossible";
+}
+```
+
+**NEVER fix just where the error appears.** Trace back to find the original trigger.
+
+## Stack Trace Tips
+
+- **In tests:** Use `console.error()` not logger - logger may be suppressed
+- **Before operation:** Log before the dangerous operation, not after it fails
+- **Include context:** Directory, cwd, environment variables, timestamps
+- **Capture stack:** `new Error().stack` shows complete call chain
+
+## Integration
+
+This rule is REQUIRED when using systematic-debugging for errors deep in call stack. After tracing and fixing, use defense-in-depth to add validation at each layer.
+
+For detailed workflows, use the `.cursor/commands/superpowers/debug.md` command.
